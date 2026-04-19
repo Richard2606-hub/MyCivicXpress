@@ -7,6 +7,8 @@ import '../../models/transit_model.dart';
 import '../../widgets/transit/station_card.dart';
 import '../../providers/civic_provider.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 // Provider for the API service
 final transitApiProvider = Provider((ref) => TransitApiService());
 
@@ -25,7 +27,13 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
   
   String selectedLineId = 'all';
   String? selectedStationId;
+  String? currentViewingState; // To allow switching for travel
   bool isLoading = true;
+
+  final List<String> _malaysianStates = [
+    'Kuala Lumpur', 'Selangor', 'Johor', 'Penang', 'Perak', 'Pahang', 'Negeri Sembilan', 
+    'Melaka', 'Terengganu', 'Kelantan', 'Kedah', 'Perlis', 'Sabah', 'Sarawak', 'Putrajaya', 'Labuan'
+  ];
 
   @override
   void initState() {
@@ -37,9 +45,13 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
     final api = ref.read(transitApiProvider);
     final profile = ref.read(citizenProfileProvider);
     
-    final fetchedLines = await api.getLines();
-    final fetchedNearby = await api.getNearbyStations(profile.location);
-    final fetchedStations = await api.getStationsByLine(selectedLineId);
+    // Default to profile location if not already viewing a specific state
+    currentViewingState ??= profile.location;
+
+    // Fetch only lines available in the selected viewing state
+    final fetchedLines = await api.getLinesForState(currentViewingState!);
+    final fetchedNearby = await api.getNearbyStations(currentViewingState!);
+    final fetchedStations = await api.getStationsByLine(selectedLineId, currentViewingState!);
 
     if (mounted) {
       setState(() {
@@ -78,7 +90,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
     });
     
     final api = ref.read(transitApiProvider);
-    final fetchedStations = await api.getStationsByLine(lineId);
+    final fetchedStations = await api.getStationsByLine(lineId, currentViewingState!);
     
     if (mounted) {
       setState(() {
@@ -114,12 +126,18 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
                       const SizedBox(height: 10),
                       _buildLineSelector(),
                       const SizedBox(height: 24),
+                      _buildStateTravelSelector(),
+                      const SizedBox(height: 24),
                       _buildStationSelector(),
                       const SizedBox(height: 32),
-                      _buildSectionTitle('Nearby in ${profile.location}', LucideIcons.mapPin),
-                      const SizedBox(height: 16),
+                      _buildSectionTitle('Nearby in $currentViewingState', LucideIcons.mapPin),
+                      const SizedBox(height: 32),
                       _buildNearbyStationsSection(),
                       const SizedBox(height: 32),
+                      if (lines.any((l) => l.type == TransitType.drt)) ...[
+                        _buildOnDemandVanCard(profile.location),
+                        const SizedBox(height: 32),
+                      ],
                       _buildSectionTitle('Live Arrivals', LucideIcons.radio),
                       const SizedBox(height: 16),
                       _buildArrivalsList(),
@@ -246,6 +264,50 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
     ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0);
   }
 
+  Widget _buildStateTravelSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Viewing State (Travel Mode)', style: TextStyle(color: Color(0xFF6366F1), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1)),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1E293B),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3)),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: currentViewingState,
+              isExpanded: true,
+              dropdownColor: const Color(0xFF1E293B),
+              icon: const Icon(LucideIcons.map, color: Color(0xFF6366F1), size: 18),
+              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
+              items: _malaysianStates.map((state) {
+                return DropdownMenuItem(
+                  value: state,
+                  child: Text(state),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    currentViewingState = newValue;
+                    selectedLineId = 'all';
+                    selectedStationId = null;
+                    isLoading = true;
+                  });
+                  _initializeData();
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    ).animate().fadeIn(duration: 400.ms);
+  }
+
   Widget _buildSectionTitle(String title, IconData icon) {
     return Row(
       children: [
@@ -342,9 +404,10 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
 
     return Column(
       children: arrivals.map((arrival) {
-        // Find the line for this arrival (simplified mock logic)
-        final lineId = selectedLineId == 'all' ? 'mrt_kg' : selectedLineId;
-        final line = lines.firstWhere((l) => l.id == lineId, orElse: () => lines.first);
+        // Find the line for this arrival based on the station
+        final station = currentStations.firstWhere((s) => s.id == arrival.stationId, orElse: () => TransitStation.getMockStations().first);
+        final lineId = selectedLineId == 'all' ? station.lineIds.first : selectedLineId;
+        final line = TransitLine.getMockLines().firstWhere((l) => l.id == lineId, orElse: () => TransitLine.getMockLines().first);
         
         return ArrivalCard(arrival: arrival, line: line)
             .animate()
@@ -352,5 +415,78 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
             .slideY(begin: 0.1, end: 0);
       }).toList(),
     );
+  }
+
+  Widget _buildOnDemandVanCard(String state) {
+    final drtLine = lines.firstWhere((l) => l.type == TransitType.drt);
+    
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [const Color(0xFFFFC107).withOpacity(0.2), const Color(0xFFFFC107).withOpacity(0.05)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFFFC107).withOpacity(0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFC107).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(LucideIcons.truck, color: Color(0xFFFFC107), size: 24),
+              ),
+              const SizedBox(width: 16),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Rapid On-Demand Van',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      'Demand Responsive Transit (DRT)',
+                      style: TextStyle(color: Colors.white54, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Need a ride from your doorstep to the station? Rapid DRT is available in $state!',
+            style: const TextStyle(color: Colors.white70, fontSize: 13),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () async {
+                final url = Uri.parse(drtLine.externalUrl ?? 'https://www.myrapid.com.my/');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFFFC107),
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Book a Van Now', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn().slideY(begin: 0.1, end: 0);
   }
 }

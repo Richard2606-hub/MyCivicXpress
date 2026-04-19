@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import '../../providers/civic_provider.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/fancy_background.dart';
@@ -16,7 +17,7 @@ class AppointmentHubView extends ConsumerStatefulWidget {
 
 class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
   String _selectedAgency = 'JPN (MyKad)';
-  String _selectedDate = 'Oct 25, 2026';
+  DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
   String _selectedTime = '10:00 AM';
   bool _isBooking = false;
 
@@ -29,7 +30,7 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
     
     final appointment = CivicAppointment(
       agency: _selectedAgency,
-      date: _selectedDate,
+      date: DateFormat('MMM dd, yyyy').format(_selectedDate),
       time: _selectedTime,
       queueNumber: 'A-${100 + (DateTime.now().millisecondsSinceEpoch % 900)}',
       estWaitTime: 15,
@@ -175,10 +176,64 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text('Booking Date', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 90)),
+                    builder: (context, child) {
+                      return Theme(
+                        data: Theme.of(context).copyWith(
+                          colorScheme: const ColorScheme.dark(
+                            primary: Color(0xFF6366F1),
+                            onPrimary: Colors.white,
+                            surface: Color(0xFF1E293B),
+                            onSurface: Colors.white,
+                          ),
+                        ),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (picked != null && picked != _selectedDate) {
+                    setState(() => _selectedDate = picked);
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Colors.white.withOpacity(0.05)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(LucideIcons.calendar, color: Colors.white54, size: 18),
+                      const SizedBox(width: 12),
+                      Text(
+                        DateFormat('MMM dd, yyyy').format(_selectedDate),
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               const Text('Time Slot', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(

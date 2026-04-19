@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../models/citizen_profile.dart';
 import '../models/recommendation.dart';
 import '../models/civic_alert.dart';
@@ -8,9 +7,13 @@ import '../models/interaction_model.dart';
 import '../models/feedback_model.dart';
 import '../models/govtech_models.dart';
 import '../services/gemini_service.dart';
+import '../services/firebase_service.dart';
 
 // Provider for Navigation
 final navigationProvider = StateProvider<int>((ref) => 0);
+
+// Provider for Firebase Service
+final firebaseServiceProvider = Provider((ref) => FirebaseService());
 
 // Provider for Authentication State
 final authStateProvider = StateProvider<bool>((ref) => false);
@@ -76,28 +79,53 @@ final alertsProvider = StateProvider<List<CivicAlert>>((ref) {
 
 // Profile Notifier for persistence and DB simulation
 class CitizenProfileNotifier extends StateNotifier<CitizenProfile> {
-  CitizenProfileNotifier() : super(CitizenProfile.defaultProfile());
+  final FirebaseService _firebase;
+  
+  CitizenProfileNotifier(this._firebase) : super(const CitizenProfile(
+    fullName: 'Malaysian Citizen',
+    icNumber: '000000-00-0000',
+    dob: '',
+    gender: '',
+    location: 'Kuala Lumpur',
+    address: '',
+    isVerified: false,
+  ));
 
-  Future<bool> registerUser(CitizenProfile profile) async {
-    // Simulate JPN Identity Verification delay
-    await Future.delayed(const Duration(seconds: 2));
-    
-    // In a real app, this would be: await api.register(profile);
-    print('USER REGISTERED IN DATABASE: IC=${profile.icNumber}, Name=${profile.name}');
-    
-    state = profile.copyWith(isVerified: true);
-    return true;
+  Future<bool> registerUser(CitizenProfile profile, String password) async {
+    try {
+      // Use email-style auth for Firebase using IC
+      final email = "${profile.icNumber}@civicease.gov.my";
+      final cred = await _firebase.signUp(email, password, profile);
+      if (cred != null) {
+        state = profile.copyWith(isVerified: true);
+        return true;
+      }
+    } catch (e) {
+      print('Registration Error: $e');
+    }
+    return false;
   }
 
   Future<bool> login(String icNumber, String password) async {
-    // Simulate auth check
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    if (icNumber.isNotEmpty && password.length >= 6) {
-      print('LOGIN SUCCESSFUL: $icNumber');
-      return true;
+    try {
+      final email = "$icNumber@civicease.gov.my";
+      final cred = await _firebase.login(email, password);
+      if (cred != null && cred.user != null) {
+        final profile = await _firebase.getProfile(cred.user!.uid);
+        if (profile != null) {
+          state = profile;
+          return true;
+        }
+      }
+    } catch (e) {
+      print('Login Error: $e');
     }
     return false;
+  }
+
+  Future<void> updateImpactScore(int points) async {
+    await _firebase.updateImpactScore(points);
+    state = state.copyWith(impactScore: state.impactScore + points);
   }
 
   Future<bool> updateProfile(CitizenProfile newProfile) async {
@@ -112,7 +140,7 @@ class CitizenProfileNotifier extends StateNotifier<CitizenProfile> {
 }
 
 final citizenProfileProvider = StateNotifierProvider<CitizenProfileNotifier, CitizenProfile>((ref) {
-  return CitizenProfileNotifier();
+  return CitizenProfileNotifier(ref.read(firebaseServiceProvider));
 });
 
 // Provider for Gemini Service
@@ -241,20 +269,22 @@ final feedbackProvider = StateNotifierProvider<FeedbackNotifier, List<UserFeedba
   return FeedbackNotifier();
 });
 
-// Complaints Provider
+// Complaints Provider (Real-time Stream)
+final complaintsStreamProvider = StreamProvider<List<CivicComplaint>>((ref) {
+  return ref.read(firebaseServiceProvider).getMyComplaints();
+});
+
 class ComplaintsNotifier extends StateNotifier<List<CivicComplaint>> {
-  ComplaintsNotifier() : super([]);
+  final FirebaseService _firebase;
+  ComplaintsNotifier(this._firebase) : super([]);
 
   Future<void> submitComplaint(CivicComplaint complaint) async {
-    await Future.delayed(const Duration(seconds: 1));
-    state = [complaint, ...state];
-    // Reward user for reporting
-    // ref.read(impactScoreProvider.notifier).state += 50; 
+    await _firebase.submitComplaint(complaint);
   }
 }
 
 final complaintsProvider = StateNotifierProvider<ComplaintsNotifier, List<CivicComplaint>>((ref) {
-  return ComplaintsNotifier();
+  return ComplaintsNotifier(ref.read(firebaseServiceProvider));
 });
 
 // Subsidy Provider
@@ -325,19 +355,23 @@ final chatProvider = StateNotifierProvider<ChatNotifier, List<ChatMessage>>((ref
   return ChatNotifier(ref);
 });
 
-// Appointment Model
-class CivicAppointment {
-  final String agency;
-  final String date;
-  final String time;
-  final String queueNumber;
-  final int estWaitTime;
+// Appointment Provider (Real-time Stream)
+final appointmentStreamProvider = StreamProvider<CivicAppointment?>((ref) {
+  return ref.read(firebaseServiceProvider).getLatestAppointment();
+});
 
-  CivicAppointment({required this.agency, required this.date, required this.time, required this.queueNumber, required this.estWaitTime});
+class AppointmentNotifier extends StateNotifier<CivicAppointment?> {
+  final FirebaseService _firebase;
+  AppointmentNotifier(this._firebase) : super(null);
+
+  Future<void> bookAppointment(CivicAppointment appointment) async {
+    await _firebase.bookAppointment(appointment);
+  }
 }
 
-// Appointment Provider
-final appointmentProvider = StateProvider<CivicAppointment?>((ref) => null);
+final appointmentProvider = StateNotifierProvider<AppointmentNotifier, CivicAppointment?>((ref) {
+  return AppointmentNotifier(ref.read(firebaseServiceProvider));
+});
 
 // Simplified Guidance State
 final guidanceProvider = StateProvider<AsyncValue<Recommendation?>>((ref) => const AsyncData(null));

@@ -3,7 +3,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import '../models/recommendation.dart';
 
 class GeminiService {
-  static const _modelName = 'gemini-3.1-flash-lite-preview';
+  static const _modelName = 'gemini-2.0-flash';
   final GenerativeModel _model;
 
   GeminiService(String apiKey)

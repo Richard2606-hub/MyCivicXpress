@@ -171,7 +171,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.1),
+              color: const Color(0xFF6366F1).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(LucideIcons.train, color: Color(0xFF6366F1), size: 24),
@@ -211,9 +211,9 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
         margin: const EdgeInsets.only(right: 12),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? color : color.withOpacity(0.1),
+          color: isSelected ? color : color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: color.withOpacity(0.3)),
+          border: Border.all(color: color.withValues(alpha: 0.3)),
         ),
         child: Center(
           child: Text(
@@ -235,7 +235,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -275,7 +275,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
           decoration: BoxDecoration(
             color: const Color(0xFF1E293B),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF6366F1).withOpacity(0.3)),
+            border: Border.all(color: const Color(0xFF6366F1).withValues(alpha: 0.3)),
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
@@ -347,10 +347,10 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
               margin: const EdgeInsets.only(right: 16, bottom: 4),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isSelected ? const Color(0xFF6366F1).withOpacity(0.2) : const Color(0xFF1E293B),
+                color: isSelected ? const Color(0xFF6366F1).withValues(alpha: 0.2) : const Color(0xFF1E293B),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isSelected ? const Color(0xFF6366F1) : Colors.white.withOpacity(0.05),
+                  color: isSelected ? const Color(0xFF6366F1) : Colors.white.withValues(alpha: 0.05),
                 ),
               ),
               child: Column(
@@ -366,7 +366,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
                   const SizedBox(height: 4),
                   Text(
                     '${station.lineIds.length} Lines Available',
-                    style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 11),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 11),
                   ),
                 ],
               ),
@@ -395,7 +395,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
             const SizedBox(height: 16),
             Text(
               'No upcoming arrivals found',
-              style: TextStyle(color: Colors.white.withOpacity(0.4)),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.4)),
             ),
           ],
         ),
@@ -424,12 +424,12 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [const Color(0xFFFFC107).withOpacity(0.2), const Color(0xFFFFC107).withOpacity(0.05)],
+          colors: [const Color(0xFFFFC107).withValues(alpha: 0.2), const Color(0xFFFFC107).withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFFFC107).withOpacity(0.3)),
+        border: Border.all(color: const Color(0xFFFFC107).withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,7 +439,7 @@ class _TransitDashboardViewState extends ConsumerState<TransitDashboardView> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFC107).withOpacity(0.1),
+                  color: const Color(0xFFFFC107).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(LucideIcons.truck, color: Color(0xFFFFC107), size: 24),

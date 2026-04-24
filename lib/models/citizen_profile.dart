@@ -1,72 +1,105 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
-@immutable
 class CitizenProfile {
-  final String fullName;
-  final String icNumber;
-  final String dob;
+  final String id;
+  final String name; // Full name as per IC
+  final String icNumber; // Malaysian IC
+  final String dateOfBirth;
   final String gender;
-  final String location;
+  final String location; // State/City
   final String address;
-  final int impactScore;
+  final List<String> interests;
+  final Map<String, dynamic> preferences;
   final bool isVerified;
 
-  const CitizenProfile({
-    required this.fullName,
+  CitizenProfile({
+    required this.id,
+    required this.name,
     required this.icNumber,
-    required this.dob,
+    required this.dateOfBirth,
     required this.gender,
     required this.location,
     required this.address,
-    this.impactScore = 0,
+    required this.interests,
+    this.preferences = const {},
     this.isVerified = false,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'fullName': fullName,
-      'icNumber': icNumber,
-      'dob': dob,
-      'gender': gender,
-      'location': location,
-      'address': address,
-      'impactScore': impactScore,
-      'isVerified': isVerified,
-    };
-  }
-
-  factory CitizenProfile.fromMap(Map<String, dynamic> map) {
+  factory CitizenProfile.defaultProfile() {
     return CitizenProfile(
-      fullName: map['fullName'] ?? '',
-      icNumber: map['icNumber'] ?? '',
-      dob: map['dob'] ?? '',
-      gender: map['gender'] ?? '',
-      location: map['location'] ?? '',
-      address: map['address'] ?? '',
-      impactScore: map['impactScore'] ?? 0,
-      isVerified: map['isVerified'] ?? false,
+      id: 'guest',
+      name: 'Malaysian Citizen',
+      icNumber: '000000-00-0000',
+      dateOfBirth: '2000-01-01',
+      gender: 'Other',
+      location: 'Kuala Lumpur',
+      address: 'Jalan Sultan Ismail, 50250 Kuala Lumpur',
+      interests: ['Public Transport', 'Health', 'Welfare'],
     );
   }
 
   CitizenProfile copyWith({
-    String? fullName,
+    String? name,
     String? icNumber,
-    String? dob,
+    String? dateOfBirth,
     String? gender,
     String? location,
     String? address,
-    int? impactScore,
+    List<String>? interests,
+    Map<String, dynamic>? preferences,
     bool? isVerified,
   }) {
     return CitizenProfile(
-      fullName: fullName ?? this.fullName,
+      id: id,
+      name: name ?? this.name,
       icNumber: icNumber ?? this.icNumber,
-      dob: dob ?? this.dob,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       gender: gender ?? this.gender,
       location: location ?? this.location,
       address: address ?? this.address,
-      impactScore: impactScore ?? this.impactScore,
+      interests: interests ?? this.interests,
+      preferences: preferences ?? this.preferences,
       isVerified: isVerified ?? this.isVerified,
     );
+  }
+
+  // Firebase-compatible serialization
+  Map<String, dynamic> toMap() => toJson();
+  factory CitizenProfile.fromMap(Map<String, dynamic> map) => CitizenProfile.fromJson(map);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'icNumber': icNumber,
+      'dateOfBirth': dateOfBirth,
+      'gender': gender,
+      'location': location,
+      'address': address,
+      'interests': interests,
+      'preferences': preferences,
+      'isVerified': isVerified,
+    };
+  }
+
+  factory CitizenProfile.fromJson(Map<String, dynamic> json) {
+    return CitizenProfile(
+      id: json['id'] ?? 'guest',
+      name: json['name'] ?? json['fullName'] ?? 'Malaysian Citizen',
+      icNumber: json['icNumber'] ?? '000000-00-0000',
+      dateOfBirth: json['dateOfBirth'] ?? json['dob'] ?? '2000-01-01',
+      gender: json['gender'] ?? 'Other',
+      location: json['location'] ?? 'Kuala Lumpur',
+      address: json['address'] ?? '',
+      interests: List<String>.from(json['interests'] ?? ['Public Transport', 'Health', 'Welfare']),
+      preferences: Map<String, dynamic>.from(json['preferences'] ?? {}),
+      isVerified: json['isVerified'] ?? false,
+    );
+  }
+
+  String toJsonString() => jsonEncode(toJson());
+
+  factory CitizenProfile.fromJsonString(String jsonStr) {
+    return CitizenProfile.fromJson(jsonDecode(jsonStr));
   }
 }

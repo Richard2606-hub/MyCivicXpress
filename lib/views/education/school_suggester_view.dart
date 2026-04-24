@@ -60,7 +60,7 @@ class SchoolSuggesterView extends ConsumerWidget {
               hasLocation 
                   ? 'Based on your personal profile settings.' 
                   : 'Please update your Personal Details on the Dashboard to see nearby schools.',
-              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 14),
             ).animate().fadeIn(delay: 200.ms),
             
             const SizedBox(height: 32),
@@ -71,7 +71,7 @@ class SchoolSuggesterView extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(LucideIcons.mapPinOff, color: Colors.white.withOpacity(0.2), size: 64),
+                      Icon(LucideIcons.mapPinOff, color: Colors.white.withValues(alpha: 0.2), size: 64),
                       const SizedBox(height: 16),
                       const Text('No Location Set', style: TextStyle(color: Colors.white, fontSize: 20)),
                     ],
@@ -105,14 +105,14 @@ class SchoolSuggesterView extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 24),
@@ -129,7 +129,7 @@ class SchoolSuggesterView extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   school['type']!,
-                  style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
                 ),
               ],
             ),

@@ -36,8 +36,8 @@ class MainNavigation extends ConsumerWidget {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF0F172A).withOpacity(0.8),
-            border: Border(top: BorderSide(color: Colors.white.withOpacity(0.1))),
+            color: const Color(0xFF0F172A).withValues(alpha: 0.8),
+            border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
           ),
           child: BottomNavigationBar(
             currentIndex: selectedIndex,

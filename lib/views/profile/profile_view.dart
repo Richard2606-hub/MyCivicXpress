@@ -77,7 +77,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               child: Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1).withOpacity(0.2),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(LucideIcons.user, color: Color(0xFF6366F1), size: 64),
@@ -98,7 +98,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
             const SizedBox(height: 12),
             Text(
               'Your information is stored securely in our database and used to personalize your experience.',
-              style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12),
             ),
             
             const SizedBox(height: 48),
@@ -136,7 +136,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.3)),
+        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.3)),
         prefixIcon: Icon(icon, color: Colors.white54),
         filled: true,
         fillColor: const Color(0xFF1E293B),

@@ -33,7 +33,7 @@ class SubsidyHubView extends ConsumerWidget {
               style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            ...subsidies.map((s) => _buildSubsidyCard(s)).toList(),
+            ...subsidies.map((s) => _buildSubsidyCard(s)),
           ],
         ),
       ),
@@ -45,8 +45,8 @@ class SubsidyHubView extends ConsumerWidget {
     
     return GlassCard(
       gradientColors: [
-        const Color(0xFF10B981).withOpacity(0.2),
-        const Color(0xFF059669).withOpacity(0.05),
+        const Color(0xFF10B981).withValues(alpha: 0.2),
+        const Color(0xFF059669).withValues(alpha: 0.05),
       ],
       child: Column(
         children: [
@@ -107,7 +107,7 @@ class SubsidyHubView extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: subsidy.isEligible ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.1),
+                    color: subsidy.isEligible ? Colors.green.withValues(alpha: 0.2) : Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(

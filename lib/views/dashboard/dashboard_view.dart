@@ -16,7 +16,7 @@ import '../ai/civic_ai_chat_view.dart';
 import '../renewal/renewal_hub_view.dart';
 import '../health/health_dashboard_view.dart';
 import '../education/education_hub_view.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 class DashboardView extends ConsumerWidget {
   const DashboardView({super.key});
@@ -99,7 +99,7 @@ class DashboardView extends ConsumerWidget {
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AppointmentHubView())),
       child: GlassCard(
         padding: const EdgeInsets.all(16),
-        gradientColors: [const Color(0xFF6366F1).withOpacity(0.3), const Color(0xFF6366F1).withOpacity(0.1)],
+        gradientColors: [const Color(0xFF6366F1).withValues(alpha: 0.3), const Color(0xFF6366F1).withValues(alpha: 0.1)],
         child: Row(
           children: [
             const Icon(LucideIcons.calendarCheck, color: Colors.white, size: 28),
@@ -149,7 +149,7 @@ class DashboardView extends ConsumerWidget {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
           child: Text(currentLang, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
         ),
       ),
@@ -160,7 +160,7 @@ class DashboardView extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 12),
       padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(color: Colors.amber.withOpacity(0.15), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.amber.withOpacity(0.3))),
+      decoration: BoxDecoration(color: Colors.amber.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20), border: Border.all(color: Colors.amber.withValues(alpha: 0.3))),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -175,7 +175,7 @@ class DashboardView extends ConsumerWidget {
   Widget _buildProfileButton(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), shape: BoxShape.circle),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
       child: IconButton(
         icon: const Icon(LucideIcons.user, color: Colors.white, size: 20),
         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileView())),
@@ -188,7 +188,7 @@ class DashboardView extends ConsumerWidget {
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DigitalIDView())),
       child: GlassCard(
         padding: const EdgeInsets.all(16),
-        gradientColors: [Colors.blue.withOpacity(0.2), Colors.cyan.withOpacity(0.1)],
+        gradientColors: [Colors.blue.withValues(alpha: 0.2), Colors.cyan.withValues(alpha: 0.1)],
         child: Row(
           children: [
             const Icon(LucideIcons.qrCode, color: Colors.cyanAccent, size: 32),
@@ -217,7 +217,7 @@ class DashboardView extends ConsumerWidget {
         decoration: BoxDecoration(
           gradient: const LinearGradient(colors: [Color(0xFFEF4444), Color(0xFFB91C1C)]),
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)],
+          boxShadow: [BoxShadow(color: Colors.red.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 2)],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -257,7 +257,7 @@ class DashboardView extends ConsumerWidget {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      childAspectRatio: 1.1,
+      childAspectRatio: 0.9,
       children: [
         _buildActionCard(LucideIcons.fileEdit, t['complaints']!, Colors.orangeAccent, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ComplaintSystemView()))),
         _buildActionCard(LucideIcons.heartPulse, 'Health Hub', AppTheme.secondaryColor, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthDashboardView()))),
@@ -275,7 +275,7 @@ class DashboardView extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: color.withOpacity(0.15), shape: BoxShape.circle), child: Icon(icon, color: color, size: 28)),
+            Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: color.withValues(alpha: 0.15), shape: BoxShape.circle), child: Icon(icon, color: color, size: 28)),
             const SizedBox(height: 16),
             Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white), textAlign: TextAlign.center),
           ],
@@ -288,7 +288,7 @@ class DashboardView extends ConsumerWidget {
     return GestureDetector(
       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SubsidyHubView())),
       child: GlassCard(
-        gradientColors: [Colors.green.withOpacity(0.15), Colors.green.withOpacity(0.05)],
+        gradientColors: [Colors.green.withValues(alpha: 0.15), Colors.green.withValues(alpha: 0.05)],
         child: Row(
           children: [
             const Icon(LucideIcons.wallet, color: Colors.greenAccent),

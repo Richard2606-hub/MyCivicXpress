@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import '../../providers/civic_provider.dart';
@@ -54,7 +53,7 @@ class _CivicAIChatViewState extends ConsumerState<CivicAIChatView> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1).withOpacity(0.1),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(LucideIcons.bot, color: Color(0xFF6366F1), size: 20),
@@ -105,8 +104,8 @@ class _CivicAIChatViewState extends ConsumerState<CivicAIChatView> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               borderRadius: 16,
               gradientColors: message.isUser 
-                ? [const Color(0xFF6366F1).withOpacity(0.3), const Color(0xFF6366F1).withOpacity(0.1)]
-                : [Colors.white.withOpacity(0.08), Colors.white.withOpacity(0.03)],
+                ? [const Color(0xFF6366F1).withValues(alpha: 0.3), const Color(0xFF6366F1).withValues(alpha: 0.1)]
+                : [Colors.white.withValues(alpha: 0.08), Colors.white.withValues(alpha: 0.03)],
               child: Text(
                 message.text,
                 style: const TextStyle(color: Colors.white, fontSize: 14),

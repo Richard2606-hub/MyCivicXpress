@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../widgets/glass_card.dart';
-import '../../core/theme.dart';
 import '../../providers/civic_provider.dart';
 import '../../models/interaction_model.dart';
 import '../../models/recommendation.dart';
@@ -47,6 +46,11 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
               Navigator.push(context, MaterialPageRoute(builder: (_) => const FeedbackView()));
             },
           ),
+          IconButton(
+            icon: const Icon(LucideIcons.logOut, color: Colors.white54),
+            tooltip: 'Logout',
+            onPressed: () => _showLogoutDialog(context),
+          ),
           const SizedBox(width: 8),
         ],
         bottom: TabBar(
@@ -65,6 +69,35 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
         children: [
           _buildActivityFeed(),
           _buildAIHistory(),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1E293B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text('Logout', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        content: const Text(
+          'Are you sure you want to logout? Your profile data will be saved.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white38)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ref.read(authStateProvider.notifier).logout();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            child: const Text('Logout', style: TextStyle(color: Colors.white)),
+          ),
         ],
       ),
     );
@@ -98,16 +131,16 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: activity.color.withOpacity(0.15),
+                  color: activity.color.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
-                  border: Border.all(color: activity.color.withOpacity(0.3)),
+                  border: Border.all(color: activity.color.withValues(alpha: 0.3)),
                 ),
                 child: Icon(activity.icon, size: 18, color: activity.color),
               ),
               Expanded(
                 child: Container(
                   width: 2,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ],
@@ -126,12 +159,12 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
                   const SizedBox(height: 4),
                   Text(
                     activity.subtitle,
-                    style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     _formatTime(activity.timestamp),
-                    style: TextStyle(color: activity.color.withOpacity(0.7), fontSize: 11, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: activity.color.withValues(alpha: 0.7), fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -173,7 +206,7 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: typeColor.withOpacity(0.1),
+                  color: typeColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(_getIconForType(rec.type), size: 20, color: typeColor),
@@ -227,7 +260,6 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
       case RecommendationType.document: return const Color(0xFFEC4899);
       case RecommendationType.emergency: return Colors.redAccent;
       case RecommendationType.information: return Colors.blue;
-      default: return Colors.grey;
     }
   }
 
@@ -236,11 +268,121 @@ class _CivicHistoryViewState extends ConsumerState<CivicHistoryView> with Single
       case RecommendationType.service: return LucideIcons.briefcase;
       case RecommendationType.document: return LucideIcons.fileText;
       case RecommendationType.emergency: return LucideIcons.alertTriangle;
-      default: return LucideIcons.info;
+      case RecommendationType.information: return LucideIcons.info;
     }
   }
 
   void _showRecommendationDetail(BuildContext context, Recommendation rec) {
-    // Re-use existing modal logic or expand here
+    final typeColor = _getTypeColor(rec.type);
+    
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.75,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF1E293B),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40, height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white24,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: typeColor.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(_getIconForType(rec.type), color: typeColor, size: 24),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(rec.title, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text(rec.agency, style: TextStyle(color: typeColor, fontSize: 13, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                    if (rec.isUrgent)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text('URGENT', style: TextStyle(color: Colors.redAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Text(rec.description, style: const TextStyle(color: Colors.white70, fontSize: 15, height: 1.6)),
+                if (rec.steps.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  const Text('Steps', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 12),
+                  ...rec.steps.asMap().entries.map((entry) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 28, height: 28,
+                          decoration: BoxDecoration(
+                            color: typeColor.withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text('${entry.key + 1}', style: TextStyle(color: typeColor, fontWeight: FontWeight.bold, fontSize: 12)),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(child: Text(entry.value, style: const TextStyle(color: Colors.white70, fontSize: 14))),
+                      ],
+                    ),
+                  )),
+                ],
+                if (rec.requiredDocuments.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  const Text('Required Documents', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 12),
+                  ...rec.requiredDocuments.map((doc) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      children: [
+                        Icon(LucideIcons.fileCheck, color: Colors.greenAccent.withValues(alpha: 0.7), size: 16),
+                        const SizedBox(width: 12),
+                        Expanded(child: Text(doc, style: const TextStyle(color: Colors.white60, fontSize: 14))),
+                      ],
+                    ),
+                  )),
+                ],
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

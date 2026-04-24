@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../providers/civic_provider.dart';
+import '../../models/citizen_profile.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/fancy_background.dart';
 
@@ -61,20 +62,20 @@ class DigitalIDView extends ConsumerWidget {
     );
   }
 
-  Widget _buildDigitalCard(profile) {
+  Widget _buildDigitalCard(CitizenProfile profile) {
     return GlassCard(
       padding: EdgeInsets.zero,
       gradientColors: [
-        const Color(0xFF6366F1).withOpacity(0.2),
-        const Color(0xFF22D3EE).withOpacity(0.1),
+        const Color(0xFF6366F1).withValues(alpha: 0.2),
+        const Color(0xFF22D3EE).withValues(alpha: 0.1),
       ],
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
-              border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.1))),
+              color: Colors.white.withValues(alpha: 0.05),
+              border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +130,7 @@ class DigitalIDView extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.greenAccent.withOpacity(0.1),
+                          color: Colors.greenAccent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
@@ -165,7 +166,7 @@ class DigitalIDView extends ConsumerWidget {
         const SizedBox(height: 8),
         Text(
           'Approved by JPN & National Cyber Security Agency',
-          style: TextStyle(color: Colors.white.withOpacity(0.1), fontSize: 10),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.1), fontSize: 10),
         ),
       ],
     );

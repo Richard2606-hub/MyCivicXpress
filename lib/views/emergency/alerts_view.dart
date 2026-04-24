@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../widgets/glass_card.dart';
-import '../../core/theme.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/civic_provider.dart';
 import '../../models/civic_alert.dart';
@@ -85,7 +85,7 @@ class _AlertsViewState extends ConsumerState<AlertsView> {
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF6366F1) : const Color(0xFF1E293B),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? Colors.transparent : Colors.white.withOpacity(0.1)),
+          border: Border.all(color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.1)),
         ),
         child: Row(
           children: [
@@ -113,8 +113,8 @@ class _AlertsViewState extends ConsumerState<AlertsView> {
       margin: const EdgeInsets.only(bottom: 16),
       child: GlassCard(
         gradientColors: isUrgent 
-            ? [Colors.red.withOpacity(0.15), Colors.transparent] 
-            : [categoryColor.withOpacity(0.05), Colors.transparent],
+            ? [Colors.red.withValues(alpha: 0.15), Colors.transparent] 
+            : [categoryColor.withValues(alpha: 0.05), Colors.transparent],
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -171,10 +171,10 @@ class _AlertsViewState extends ConsumerState<AlertsView> {
                   icon: const Icon(LucideIcons.sparkles, size: 16),
                   label: const Text('Analyze with AI Assistant'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: categoryColor.withOpacity(0.2),
+                    backgroundColor: categoryColor.withValues(alpha: 0.2),
                     foregroundColor: categoryColor,
                     elevation: 0,
-                    side: BorderSide(color: categoryColor.withOpacity(0.3)),
+                    side: BorderSide(color: categoryColor.withValues(alpha: 0.3)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                 ),

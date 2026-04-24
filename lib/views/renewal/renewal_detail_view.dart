@@ -42,7 +42,7 @@ class RenewalDetailView extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: renewal.color.withOpacity(0.2),
+                      color: renewal.color.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(renewal.icon, color: renewal.color, size: 48),
@@ -83,7 +83,7 @@ class RenewalDetailView extends StatelessWidget {
               ).animate().fadeIn(delay: 400.ms),
               const SizedBox(height: 16),
               
-              ...renewal.requiredDocuments.map((doc) => _buildChecklistItem(doc)).toList(),
+              ...renewal.requiredDocuments.map((doc) => _buildChecklistItem(doc)),
               
               const SizedBox(height: 32),
               
@@ -102,7 +102,7 @@ class RenewalDetailView extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: const Color(0xFF1E293B),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.white.withOpacity(0.05)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                 ),
                 child: Row(
                   children: [

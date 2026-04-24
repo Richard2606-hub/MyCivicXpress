@@ -91,7 +91,7 @@ class _WeatherMapViewState extends ConsumerState<WeatherMapView> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.black.withOpacity(0.8),
+                Colors.black.withValues(alpha: 0.8),
                 Colors.transparent,
               ],
             ),
@@ -167,10 +167,10 @@ class _WeatherMapViewState extends ConsumerState<WeatherMapView> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1).withOpacity(0.9),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 5)),
                   ],
                 ),
                 child: const Row(
@@ -206,12 +206,12 @@ class _WeatherMapViewState extends ConsumerState<WeatherMapView> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A).withOpacity(0.9),
+        color: const Color(0xFF0F172A).withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -260,7 +260,7 @@ class _WeatherMapViewState extends ConsumerState<WeatherMapView> {
                         Text(
                           _weatherData!['conditionText'],
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 16,
                           ),
                         ),
@@ -295,7 +295,7 @@ class _WeatherMapViewState extends ConsumerState<WeatherMapView> {
         ),
         Text(
           label,
-          style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 12),
         ),
       ],
     );

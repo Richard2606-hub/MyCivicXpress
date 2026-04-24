@@ -43,7 +43,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
-        ref.read(authStateProvider.notifier).state = true;
+        ref.read(authStateProvider.notifier).setLoggedIn(true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid IC or Password (min 6 chars)')),
@@ -151,7 +151,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         hintStyle: const TextStyle(color: Colors.white24),
         prefixIcon: Icon(icon, color: Colors.white54, size: 20),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.05),
+        fillColor: Colors.white.withValues(alpha: 0.05),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

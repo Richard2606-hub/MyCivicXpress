@@ -77,7 +77,7 @@ class MeshPainter extends CustomPainter {
     final paint = Paint()..maskFilter = const MaskFilter.blur(BlurStyle.normal, 100);
     
     // Orb 1
-    paint.color = AppTheme.primaryColor.withOpacity(0.3);
+    paint.color = AppTheme.primaryColor.withValues(alpha: 0.3);
     canvas.drawCircle(
       Offset(
         size.width * (0.5 + 0.3 * math.sin(animation.value * 2 * math.pi)),
@@ -88,7 +88,7 @@ class MeshPainter extends CustomPainter {
     );
 
     // Orb 2
-    paint.color = AppTheme.secondaryColor.withOpacity(0.2);
+    paint.color = AppTheme.secondaryColor.withValues(alpha: 0.2);
     canvas.drawCircle(
       Offset(
         size.width * (0.2 + 0.4 * math.cos(animation.value * 2 * math.pi)),
@@ -99,7 +99,7 @@ class MeshPainter extends CustomPainter {
     );
 
     // Orb 3
-    paint.color = AppTheme.accentColor.withOpacity(0.15);
+    paint.color = AppTheme.accentColor.withValues(alpha: 0.15);
     canvas.drawCircle(
       Offset(
         size.width * (0.8 + 0.2 * math.sin(animation.value * 2 * math.pi + 1)),

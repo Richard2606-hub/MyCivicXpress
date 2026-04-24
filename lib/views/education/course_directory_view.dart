@@ -138,7 +138,7 @@ class _CourseDirectoryViewState extends State<CourseDirectoryView> {
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF6366F1) : const Color(0xFF1E293B),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? Colors.transparent : Colors.white.withOpacity(0.1)),
+          border: Border.all(color: isSelected ? Colors.transparent : Colors.white.withValues(alpha: 0.1)),
         ),
         child: Text(
           label,
@@ -158,7 +158,7 @@ class _CourseDirectoryViewState extends State<CourseDirectoryView> {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +174,7 @@ class _CourseDirectoryViewState extends State<CourseDirectoryView> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: course.type == 'Public' ? Colors.green.withOpacity(0.2) : Colors.orange.withOpacity(0.2),
+                  color: course.type == 'Public' ? Colors.green.withValues(alpha: 0.2) : Colors.orange.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -220,7 +220,7 @@ class _CourseDirectoryViewState extends State<CourseDirectoryView> {
               icon: const Icon(LucideIcons.globe, size: 16, color: Colors.blueAccent),
               label: const Text('Visit Official Website', style: TextStyle(color: Colors.blueAccent)),
               style: OutlinedButton.styleFrom(
-                side: BorderSide(color: Colors.blueAccent.withOpacity(0.5)),
+                side: BorderSide(color: Colors.blueAccent.withValues(alpha: 0.5)),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),

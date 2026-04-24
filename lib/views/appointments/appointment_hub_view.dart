@@ -36,7 +36,7 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
       estWaitTime: 15,
     );
 
-    ref.read(appointmentProvider.notifier).state = appointment;
+    ref.read(appointmentProvider.notifier).setAppointment(appointment);
     
     if (mounted) {
       setState(() => _isBooking = false);
@@ -88,8 +88,8 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
   Widget _buildQueueTicket(CivicAppointment booking) {
     return GlassCard(
       gradientColors: [
-        const Color(0xFF6366F1).withOpacity(0.25),
-        const Color(0xFF22D3EE).withOpacity(0.1),
+        const Color(0xFF6366F1).withValues(alpha: 0.25),
+        const Color(0xFF22D3EE).withValues(alpha: 0.1),
       ],
       child: Column(
         children: [
@@ -118,7 +118,7 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Row(
@@ -153,7 +153,7 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(16)),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: _selectedAgency,
@@ -206,9 +206,9 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white.withOpacity(0.05)),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                   ),
                   child: Row(
                     children: [
@@ -234,7 +234,7 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
               const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(16)),
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(16)),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: _selectedTime,

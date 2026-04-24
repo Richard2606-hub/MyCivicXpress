@@ -54,7 +54,7 @@ class _AIAssistantViewState extends ConsumerState<AIAssistantView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(LucideIcons.bot, size: 64, color: AppTheme.primaryColor.withOpacity(0.5)),
+                Icon(LucideIcons.bot, size: 64, color: AppTheme.primaryColor.withValues(alpha: 0.5)),
                 const SizedBox(height: 16),
                 const Text(
                   'How can I help you today?',
@@ -98,7 +98,7 @@ class _AIAssistantViewState extends ConsumerState<AIAssistantView> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor,
-        border: Border(top: BorderSide(color: Colors.white.withOpacity(0.1))),
+        border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
       ),
       child: Row(
         children: [
@@ -112,7 +112,7 @@ class _AIAssistantViewState extends ConsumerState<AIAssistantView> {
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.white.withOpacity(0.05),
+                fillColor: Colors.white.withValues(alpha: 0.05),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               onSubmitted: (_) => _submitQuery(),
@@ -143,8 +143,8 @@ class _RecommendationView extends StatelessWidget {
       children: [
         GlassCard(
           gradientColors: [
-            AppTheme.primaryColor.withOpacity(0.2),
-            AppTheme.secondaryColor.withOpacity(0.1),
+            AppTheme.primaryColor.withValues(alpha: 0.2),
+            AppTheme.secondaryColor.withValues(alpha: 0.1),
           ],
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +160,7 @@ class _RecommendationView extends StatelessWidget {
                     recommendation.agency,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.accentColor.withOpacity(0.8),
+                      color: AppTheme.accentColor.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -193,8 +193,8 @@ class _RecommendationView extends StatelessWidget {
           children: recommendation.requiredDocuments.map((doc) {
             return Chip(
               label: Text(doc, style: const TextStyle(fontSize: 12)),
-              backgroundColor: Colors.white.withOpacity(0.05),
-              side: BorderSide(color: Colors.white.withOpacity(0.1)),
+              backgroundColor: Colors.white.withValues(alpha: 0.05),
+              side: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             );
           }).toList(),
         ),
@@ -217,7 +217,7 @@ class _RecommendationView extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 12,
-            backgroundColor: AppTheme.primaryColor.withOpacity(0.2),
+            backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.2),
             child: Text(
               num.toString(),
               style: const TextStyle(fontSize: 12, color: AppTheme.primaryColor, fontWeight: FontWeight.bold),

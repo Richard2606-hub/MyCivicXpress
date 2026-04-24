@@ -77,7 +77,7 @@ class _HealthDashboardViewState extends ConsumerState<HealthDashboardView> {
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 0.85,
+                childAspectRatio: 1.0,
                 children: [
                   HealthMetricCard(
                     title: 'Daily Blood Donations',
@@ -109,7 +109,7 @@ class _HealthDashboardViewState extends ConsumerState<HealthDashboardView> {
               else
                 ...facilities.asMap().entries.map((entry) {
                   return _buildFacilityCard(entry.value, entry.key);
-                }).toList(),
+                }),
                 
             ],
           ),
@@ -142,14 +142,14 @@ class _HealthDashboardViewState extends ConsumerState<HealthDashboardView> {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.blueAccent.withOpacity(0.2),
+              color: Colors.blueAccent.withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
             child: const Icon(LucideIcons.stethoscope, color: Colors.blueAccent),
@@ -171,7 +171,7 @@ class _HealthDashboardViewState extends ConsumerState<HealthDashboardView> {
                 Text(
                   facility['type']!,
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
                   ),
                 ),

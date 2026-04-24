@@ -6,6 +6,7 @@ import '../../providers/civic_provider.dart';
 import '../../widgets/glass_card.dart';
 import '../../widgets/fancy_background.dart';
 import '../../models/govtech_models.dart';
+import '../../core/theme.dart';
 
 class ComplaintSystemView extends ConsumerStatefulWidget {
   const ComplaintSystemView({super.key});
@@ -42,7 +43,7 @@ class _ComplaintSystemViewState extends ConsumerState<ComplaintSystemView> {
     await ref.read(complaintsProvider.notifier).submitComplaint(complaint);
     
     // Increment Citizen Score
-    ref.read(impactScoreProvider.notifier).state += 50;
+    ref.read(impactScoreProvider.notifier).add(50);
 
     if (mounted) {
       setState(() {
@@ -93,7 +94,7 @@ class _ComplaintSystemViewState extends ConsumerState<ComplaintSystemView> {
                   hintText: 'Describe the issue...',
                   hintStyle: const TextStyle(color: Colors.white24),
                   filled: true,
-                  fillColor: Colors.white.withOpacity(0.05),
+                  fillColor: Colors.white.withValues(alpha: 0.05),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                 ),
               ),
@@ -134,7 +135,7 @@ class _ComplaintSystemViewState extends ConsumerState<ComplaintSystemView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
           ),
           child: DropdownButtonHideUnderline(

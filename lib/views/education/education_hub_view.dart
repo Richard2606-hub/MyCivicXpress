@@ -18,7 +18,7 @@ class EducationHubView extends StatelessWidget {
         title: const Text('Education Hub', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +60,8 @@ class EducationHubView extends StatelessWidget {
               color: const Color(0xFF4CAF50), // Green
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SchoolSuggesterView())),
             ).animate().fadeIn(delay: 400.ms).slideX(begin: 0.1, end: 0),
+            
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -74,10 +76,10 @@ class EducationHubView extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF1E293B),
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.white.withOpacity(0.05)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -88,7 +90,7 @@ class EducationHubView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 32),
@@ -110,7 +112,7 @@ class EducationHubView extends StatelessWidget {
                   Text(
                     description,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
+                      color: Colors.white.withValues(alpha: 0.7),
                       fontSize: 14,
                     ),
                   ),

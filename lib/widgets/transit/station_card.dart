@@ -16,10 +16,10 @@ class ArrivalCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFF1E293B),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: line.color.withOpacity(0.2)),
+        border: Border.all(color: line.color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -30,7 +30,7 @@ class ArrivalCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: line.color.withOpacity(0.15),
+              color: line.color.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -58,7 +58,7 @@ class ArrivalCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: line.color.withOpacity(0.2),
+                        color: line.color.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
@@ -74,7 +74,7 @@ class ArrivalCard extends StatelessWidget {
                     Text(
                       arrival.platform,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         fontSize: 12,
                       ),
                     ),
@@ -98,7 +98,7 @@ class ArrivalCard extends StatelessWidget {
                 Text(
                   'mins',
                   style: TextStyle(
-                    color: line.color.withOpacity(0.7),
+                    color: line.color.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),

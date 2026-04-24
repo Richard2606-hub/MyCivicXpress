@@ -61,7 +61,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
-        ref.read(authStateProvider.notifier).state = true;
+        ref.read(authStateProvider.notifier).setLoggedIn(true);
         Navigator.pop(context); // Back to login, which will auto-switch to dashboard
       }
     }
@@ -146,12 +146,12 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
                           child: _isLoading
-                              ? const Column(
+                              ? const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    CircularProgressIndicator(color: Colors.white),
-                                    SizedBox(height: 8),
-                                    Text('Verifying with JPN...', style: TextStyle(color: Colors.white, fontSize: 10)),
+                                    SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)),
+                                    SizedBox(width: 12),
+                                    Text('Verifying with JPN...', style: TextStyle(color: Colors.white, fontSize: 14)),
                                   ],
                                 )
                               : const Text(
@@ -193,7 +193,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
             hintStyle: const TextStyle(color: Colors.white24, fontSize: 14),
             prefixIcon: Icon(icon, color: Colors.white54, size: 18),
             filled: true,
-            fillColor: Colors.white.withOpacity(0.05),
+            fillColor: Colors.white.withValues(alpha: 0.05),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
         ),
@@ -210,7 +210,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
           ),
           child: DropdownButtonHideUnderline(
@@ -237,7 +237,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
           ),
           child: DropdownButtonHideUnderline(

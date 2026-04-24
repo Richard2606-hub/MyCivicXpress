@@ -92,9 +92,9 @@ class _PtptnCalculatorViewState extends State<PtptnCalculatorView> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.blueAccent.withOpacity(0.1),
+                color: Colors.blueAccent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blueAccent.withOpacity(0.3)),
+                border: Border.all(color: Colors.blueAccent.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -103,7 +103,7 @@ class _PtptnCalculatorViewState extends State<PtptnCalculatorView> {
                   Expanded(
                     child: Text(
                       'B40 receives maximum loan, M40 receives 75%, and T20 receives 50%. Actual amounts may vary based on specific PTPTN approvals.',
-                      style: TextStyle(color: Colors.blueAccent.withOpacity(0.8), fontSize: 12),
+                      style: TextStyle(color: Colors.blueAccent.withValues(alpha: 0.8), fontSize: 12),
                     ),
                   ),
                 ],
@@ -128,7 +128,7 @@ class _PtptnCalculatorViewState extends State<PtptnCalculatorView> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6366F1).withOpacity(0.4),
+            color: const Color(0xFF6366F1).withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -180,7 +180,7 @@ class _PtptnCalculatorViewState extends State<PtptnCalculatorView> {
                   color: isSelected ? const Color(0xFF6366F1) : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: isSelected
-                      ? [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 4)]
+                      ? [BoxShadow(color: Colors.black.withValues(alpha: 0.2), blurRadius: 4)]
                       : [],
                 ),
                 child: Center(

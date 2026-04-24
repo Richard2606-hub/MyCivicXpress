@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/citizen_profile.dart';
 import '../models/recommendation.dart';
 import '../models/civic_alert.dart';
@@ -15,14 +18,68 @@ final navigationProvider = StateProvider<int>((ref) => 0);
 // Provider for Firebase Service
 final firebaseServiceProvider = Provider((ref) => FirebaseService());
 
-// Provider for Authentication State
-final authStateProvider = StateProvider<bool>((ref) => false);
+// Provider for Authentication State — persisted
+class AuthNotifier extends StateNotifier<bool> {
+  AuthNotifier() : super(false) {
+    _loadAuthState();
+  }
+
+  static const _key = 'civic_auth_state';
+
+  Future<void> _loadAuthState() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getBool(_key) ?? false;
+  }
+
+  Future<void> setLoggedIn(bool value) async {
+    state = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, value);
+  }
+
+  Future<void> logout() async {
+    state = false;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_key, false);
+  }
+}
+
+final authStateProvider = StateNotifierProvider<AuthNotifier, bool>((ref) {
+  return AuthNotifier();
+});
 
 // Provider for App Language (EN, BM, CN, TN)
 final languageProvider = StateProvider<String>((ref) => 'EN');
 
-// Provider for Citizen Impact Score
-final impactScoreProvider = StateProvider<int>((ref) => 1250); // Initial mock score
+// Provider for Citizen Impact Score — persisted
+class ImpactScoreNotifier extends StateNotifier<int> {
+  ImpactScoreNotifier() : super(1250) {
+    _load();
+  }
+
+  static const _key = 'civic_impact_score';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = prefs.getInt(_key) ?? 1250;
+  }
+
+  Future<void> add(int points) async {
+    state = state + points;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_key, state);
+  }
+
+  Future<void> set(int value) async {
+    state = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_key, state);
+  }
+}
+
+final impactScoreProvider = StateNotifierProvider<ImpactScoreNotifier, int>((ref) {
+  return ImpactScoreNotifier();
+});
 
 // Provider for Civic Alerts
 final alertsProvider = StateProvider<List<CivicAlert>>((ref) {
@@ -79,68 +136,72 @@ final alertsProvider = StateProvider<List<CivicAlert>>((ref) {
 
 // Profile Notifier for persistence and DB simulation
 class CitizenProfileNotifier extends StateNotifier<CitizenProfile> {
-  final FirebaseService _firebase;
-  
-  CitizenProfileNotifier(this._firebase) : super(const CitizenProfile(
-    fullName: 'Malaysian Citizen',
-    icNumber: '000000-00-0000',
-    dob: '',
-    gender: '',
-    location: 'Kuala Lumpur',
-    address: '',
-    isVerified: false,
-  ));
+  CitizenProfileNotifier() : super(CitizenProfile.defaultProfile()) {
+    _loadProfile();
+  }
 
-  Future<bool> registerUser(CitizenProfile profile, String password) async {
-    try {
-      // Use email-style auth for Firebase using IC
-      final email = "${profile.icNumber}@civicease.gov.my";
-      final cred = await _firebase.signUp(email, password, profile);
-      if (cred != null) {
-        state = profile.copyWith(isVerified: true);
-        return true;
+  static const _profileKey = 'civic_user_profile';
+
+  Future<void> _loadProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final profileStr = prefs.getString(_profileKey);
+    if (profileStr != null) {
+      try {
+        state = CitizenProfile.fromJsonString(profileStr);
+      } catch (_) {
+        // If corrupted, keep default
       }
-    } catch (e) {
-      print('Registration Error: $e');
     }
-    return false;
+  }
+
+  Future<void> _saveProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileKey, state.toJsonString());
+  }
+
+  Future<bool> registerUser(CitizenProfile profile) async {
+    // Simulate JPN Identity Verification delay
+    await Future.delayed(const Duration(seconds: 2));
+    
+    state = profile.copyWith(isVerified: true);
+    await _saveProfile();
+    return true;
   }
 
   Future<bool> login(String icNumber, String password) async {
-    try {
-      final email = "$icNumber@civicease.gov.my";
-      final cred = await _firebase.login(email, password);
-      if (cred != null && cred.user != null) {
-        final profile = await _firebase.getProfile(cred.user!.uid);
-        if (profile != null) {
-          state = profile;
-          return true;
-        }
+    // Simulate auth check
+    await Future.delayed(const Duration(milliseconds: 800));
+    
+    if (icNumber.isNotEmpty && password.length >= 6) {
+      // Try to load saved profile if IC matches
+      final prefs = await SharedPreferences.getInstance();
+      final profileStr = prefs.getString(_profileKey);
+      if (profileStr != null) {
+        try {
+          final saved = CitizenProfile.fromJsonString(profileStr);
+          // If a matching profile is found, use it
+          if (saved.icNumber == icNumber || saved.id != 'guest') {
+            state = saved;
+          }
+        } catch (_) {}
       }
-    } catch (e) {
-      print('Login Error: $e');
+      return true;
     }
     return false;
-  }
-
-  Future<void> updateImpactScore(int points) async {
-    await _firebase.updateImpactScore(points);
-    state = state.copyWith(impactScore: state.impactScore + points);
   }
 
   Future<bool> updateProfile(CitizenProfile newProfile) async {
     // Simulate database network delay
     await Future.delayed(const Duration(seconds: 1));
     
-    print('USER DATA UPDATED IN DATABASE: Name=${newProfile.name}, Location=${newProfile.location}');
-    
     state = newProfile;
+    await _saveProfile();
     return true;
   }
 }
 
 final citizenProfileProvider = StateNotifierProvider<CitizenProfileNotifier, CitizenProfile>((ref) {
-  return CitizenProfileNotifier(ref.read(firebaseServiceProvider));
+  return CitizenProfileNotifier();
 });
 
 // Provider for Gemini Service
@@ -257,10 +318,11 @@ class FeedbackNotifier extends StateNotifier<List<UserFeedback>> {
     // Simulate network delay for database submission
     await Future.delayed(const Duration(seconds: 1));
     
-    // In a real app, this would be an HTTP POST to a database/API
-    print('FEEDBACK SUBMITTED TO DATABASE: ${feedback.toJson()}');
-    
+    // Persist feedback to SharedPreferences
     state = [feedback, ...state];
+    final prefs = await SharedPreferences.getInstance();
+    final data = state.map((f) => jsonEncode(f.toJson())).toList();
+    await prefs.setStringList('civic_feedback', data);
     return true;
   }
 }
@@ -269,22 +331,18 @@ final feedbackProvider = StateNotifierProvider<FeedbackNotifier, List<UserFeedba
   return FeedbackNotifier();
 });
 
-// Complaints Provider (Real-time Stream)
-final complaintsStreamProvider = StreamProvider<List<CivicComplaint>>((ref) {
-  return ref.read(firebaseServiceProvider).getMyComplaints();
-});
-
+// Complaints Provider
 class ComplaintsNotifier extends StateNotifier<List<CivicComplaint>> {
-  final FirebaseService _firebase;
-  ComplaintsNotifier(this._firebase) : super([]);
+  ComplaintsNotifier() : super([]);
 
   Future<void> submitComplaint(CivicComplaint complaint) async {
-    await _firebase.submitComplaint(complaint);
+    await Future.delayed(const Duration(seconds: 1));
+    state = [complaint, ...state];
   }
 }
 
 final complaintsProvider = StateNotifierProvider<ComplaintsNotifier, List<CivicComplaint>>((ref) {
-  return ComplaintsNotifier(ref.read(firebaseServiceProvider));
+  return ComplaintsNotifier();
 });
 
 // Subsidy Provider
@@ -347,6 +405,13 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
       } catch (e) {
         state = [...state, ChatMessage(text: "I'm sorry, I'm having trouble connecting to the civic servers. Please try again later.", isUser: false, timestamp: DateTime.now())];
       }
+    } else {
+      // No API key configured — provide a helpful fallback response
+      state = [...state, ChatMessage(
+        text: "Thank you for your query! The AI service is currently being configured. In the meantime, you can explore our services through the Dashboard — including Renewal Hub, Health Dashboard, Transit Hub, and more.",
+        isUser: false, 
+        timestamp: DateTime.now(),
+      )];
     }
   }
 }
@@ -355,22 +420,70 @@ final chatProvider = StateNotifierProvider<ChatNotifier, List<ChatMessage>>((ref
   return ChatNotifier(ref);
 });
 
-// Appointment Provider (Real-time Stream)
-final appointmentStreamProvider = StreamProvider<CivicAppointment?>((ref) {
-  return ref.read(firebaseServiceProvider).getLatestAppointment();
-});
+// Appointment Model
+class CivicAppointment {
+  final String agency;
+  final String date;
+  final String time;
+  final String queueNumber;
+  final int estWaitTime;
 
+  CivicAppointment({required this.agency, required this.date, required this.time, required this.queueNumber, required this.estWaitTime});
+
+  Map<String, dynamic> toJson() => {
+    'agency': agency,
+    'date': date,
+    'time': time,
+    'queueNumber': queueNumber,
+    'estWaitTime': estWaitTime,
+  };
+
+  // Firebase-compatible aliases
+  Map<String, dynamic> toMap() => toJson();
+  factory CivicAppointment.fromMap(Map<String, dynamic> map) => CivicAppointment.fromJson(map);
+
+  factory CivicAppointment.fromJson(Map<String, dynamic> json) => CivicAppointment(
+    agency: json['agency'],
+    date: json['date'],
+    time: json['time'],
+    queueNumber: json['queueNumber'],
+    estWaitTime: json['estWaitTime'],
+  );
+}
+
+// Appointment Provider — persisted
 class AppointmentNotifier extends StateNotifier<CivicAppointment?> {
-  final FirebaseService _firebase;
-  AppointmentNotifier(this._firebase) : super(null);
+  AppointmentNotifier() : super(null) {
+    _load();
+  }
 
-  Future<void> bookAppointment(CivicAppointment appointment) async {
-    await _firebase.bookAppointment(appointment);
+  static const _key = 'civic_appointment';
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString(_key);
+    if (data != null) {
+      try {
+        state = CivicAppointment.fromJson(jsonDecode(data));
+      } catch (_) {}
+    }
+  }
+
+  Future<void> setAppointment(CivicAppointment appointment) async {
+    state = appointment;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_key, jsonEncode(appointment.toJson()));
+  }
+
+  Future<void> clear() async {
+    state = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
   }
 }
 
 final appointmentProvider = StateNotifierProvider<AppointmentNotifier, CivicAppointment?>((ref) {
-  return AppointmentNotifier(ref.read(firebaseServiceProvider));
+  return AppointmentNotifier();
 });
 
 // Simplified Guidance State
@@ -385,7 +498,7 @@ class GuidanceController {
     final service = _ref.read(geminiServiceProvider);
     if (service == null) {
       _ref.read(guidanceProvider.notifier).state = 
-          AsyncError('API Key not configured.', StackTrace.current);
+          AsyncError('API Key not configured. Please run the app with --dart-define=GEMINI_API_KEY=your_key', StackTrace.current);
       return;
     }
 

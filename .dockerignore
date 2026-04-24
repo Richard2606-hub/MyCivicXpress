@@ -1,0 +1,14 @@
+.dart_tool/
+.vscode/
+.idea/
+.git/
+.gitignore
+build/
+test/
+android/
+ios/
+linux/
+macos/
+windows/
+*.iml
+pubspec.lock

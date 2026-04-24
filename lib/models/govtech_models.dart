@@ -1,4 +1,4 @@
-// CivicEase AI - GovTech Models
+// MyCivicXpress - GovTech Models
 
 // Complaint Model
 enum ComplaintStatus { pending, inProgress, resolved }

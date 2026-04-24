@@ -1,6 +1,6 @@
 {
-    "name": "civic_ease_ai",
-    "short_name": "civic_ease_ai",
+    "name": "MyCivicXpress",
+    "short_name": "MyCivicXpress",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

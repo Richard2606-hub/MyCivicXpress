@@ -14,7 +14,7 @@ import 'package:civic_ease_ai/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: CivicEaseApp()));
+    await tester.pumpWidget(const ProviderScope(child: MyCivicXpressApp()));
 
     // Verify that our app builds (doesn't throw).
     expect(find.byType(MaterialApp), findsOneWidget);

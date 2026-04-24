@@ -17,7 +17,7 @@ class GeminiService {
 
   Future<Recommendation> getCivicGuidance(String userQuery, String userContext) async {
     final prompt = '''
-You are CivicEase AI, an expert agentic assistant for navigating public services in Malaysia.
+You are MyCivicXpress AI, an expert agentic assistant for navigating public services in Malaysia.
 Your goal is to provide actionable, step-by-step guidance for citizens.
 
 User Context: $userContext

@@ -62,7 +62,7 @@ class _CivicAIChatViewState extends ConsumerState<CivicAIChatView> {
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('CivicEase AI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text('MyCivicXpress AI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   Text('Official Assistant • Online', style: TextStyle(fontSize: 10, color: Colors.greenAccent)),
                 ],
               ),

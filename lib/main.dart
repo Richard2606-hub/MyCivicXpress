@@ -19,20 +19,20 @@ void main() async {
 
   runApp(
     const ProviderScope(
-      child: CivicEaseApp(),
+      child: MyCivicXpressApp(),
     ),
   );
 }
 
-class CivicEaseApp extends ConsumerWidget {
-  const CivicEaseApp({super.key});
+class MyCivicXpressApp extends ConsumerWidget {
+  const MyCivicXpressApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoggedIn = ref.watch(authStateProvider);
 
     return MaterialApp(
-      title: 'CivicEase AI',
+      title: 'MyCivicXpress',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       home: isLoggedIn ? const MainNavigation() : const LoginView(),

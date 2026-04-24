@@ -71,7 +71,7 @@ class _FeedbackViewState extends ConsumerState<FeedbackView> {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Your feedback has been submitted to our database and will help us improve CivicEaseAI.',
+              'Your feedback has been submitted to our database and will help us improve MyCivicXpress.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white70),
             ),

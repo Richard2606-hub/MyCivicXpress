@@ -69,7 +69,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     .scale(duration: 600.ms, curve: Curves.easeOutBack),
                 const SizedBox(height: 24),
                 const Text(
-                  'CivicEaseAI',
+                  'MyCivicXpress',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 32,

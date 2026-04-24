@@ -386,7 +386,7 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
   final Ref _ref;
   ChatNotifier(this._ref) : super([
     ChatMessage(
-      text: "Hello! I am your CivicEase AI Assistant. How can I help you today? You can ask me about passport renewals, MyKad updates, or available subsidies.",
+      text: "Hello! I am your MyCivicXpress AI Assistant. How can I help you today? You can ask me about passport renewals, MyKad updates, or available subsidies.",
       isUser: false,
       timestamp: DateTime.now(),
     )

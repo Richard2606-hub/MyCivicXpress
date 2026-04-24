@@ -96,13 +96,16 @@ class _AppointmentHubViewState extends ConsumerState<AppointmentHubView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(booking.agency, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
-                  Text('${booking.date} • ${booking.time}', style: const TextStyle(color: Colors.white60, fontSize: 12)),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(booking.agency, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18), overflow: TextOverflow.ellipsis),
+                    Text('${booking.date} • ${booking.time}', style: const TextStyle(color: Colors.white60, fontSize: 12), overflow: TextOverflow.ellipsis),
+                  ],
+                ),
               ),
+              const SizedBox(width: 12),
               const Icon(LucideIcons.qrCode, color: Colors.white, size: 40),
             ],
           ),

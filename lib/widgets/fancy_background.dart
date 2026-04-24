@@ -30,40 +30,38 @@ class _FancyBackgroundState extends State<FancyBackground> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment(
-                      math.sin(_controller.value * 2 * math.pi) * 0.5,
-                      math.cos(_controller.value * 2 * math.pi) * 0.5,
-                    ),
-                    radius: 1.5,
-                    colors: const [
-                      Color(0xFF1E1B4B), // Indigo 950
-                      AppTheme.backgroundColor,
-                    ],
+    return Stack(
+      children: [
+        AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(
+                    math.sin(_controller.value * 2 * math.pi) * 0.5,
+                    math.cos(_controller.value * 2 * math.pi) * 0.5,
                   ),
+                  radius: 1.5,
+                  colors: const [
+                    Color(0xFF1E1B4B), // Indigo 950
+                    AppTheme.backgroundColor,
+                  ],
                 ),
-              );
-            },
-          ),
-          Positioned.fill(
-            child: Opacity(
-              opacity: 0.3,
-              child: CustomPaint(
-                painter: MeshPainter(_controller),
               ),
+            );
+          },
+        ),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.3,
+            child: CustomPaint(
+              painter: MeshPainter(_controller),
             ),
           ),
-          widget.child,
-        ],
-      ),
+        ),
+        widget.child,
+      ],
     );
   }
 }
